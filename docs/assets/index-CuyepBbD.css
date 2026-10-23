@@ -41,6 +41,8 @@
   .box-shadow { bottom: 0; }
 
   .section { margin-top: 28px; padding-block: 0; }
+  /* The existing anchor helper offsets by 96 px; keep the title below the phone header. */
+  #catalog { margin-top: 0; padding-top: 32px; }
   .section__head { gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
   .section__title, .catpage__title { font-size: 23px; line-height: 1.15; }
   .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
