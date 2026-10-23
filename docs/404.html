@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ru" xml:lang="ru" xmlns:og="http://ogp.me/ns#">
+<head>
+  <meta name="robots" content="noindex, nofollow">
+  <base href="/lite-pack-demo/">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <title>Лайт Пак</title>
+  <meta name="description" content="Лайт-Пак" />
+  <meta property="og:title" content="Лайт-Пак" />
+  <meta property="og:site_name" content="lite-pack.ru" />
+  <meta property="og:url" content="https://lite-pack.ru" />
+  <meta property="og:description" content="Производство и продажа упаковки" />
+  <meta property="og:image" content="https://storage.yandexcloud.net/litepack-staging/assets/logo.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="ru_RU" />
+  <link rel="canonical" href="https://lite-pack.ru/" />
+  <meta name="theme-color" content="#ffffff" />
+
+  <!-- iOS meta tags & icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Лайт-Пак">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/lite-pack-demo/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="/lite-pack-demo/favicon.svg" />
+  <link rel="shortcut icon" href="/lite-pack-demo/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/lite-pack-demo/apple-touch-icon.png" />
+  <link rel="manifest" href="/lite-pack-demo/manifest.json">
+  <link rel="preconnect" href="https://storage.yandexcloud.net" crossorigin>
+
+  <!-- Yandex.Metrika counter (без изменений; запускается после согласия с cookie) -->
+  <script type="text/javascript">
+    window.startYandexMetrika = function() {
+      // В сборке для показа (npm run preview:netlify) Метрика выключена — не портим статистику сайта
+      if (window.yandexMetrikaStarted || '1' === '1') {
+        return;
+      }
+
+      const yandexMetrikaId = Number('104107498');
+      if (!Number.isInteger(yandexMetrikaId) || yandexMetrikaId <= 0) {
+        console.warn('[YandexMetrika] Missing YANDEX_METRIKA_ID');
+        return;
+      }
+
+      (function(m,e,t,r,i,k,a){
+          m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+          m[i].l=1*new Date();
+          for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+          k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+      })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=104107498','ym');
+
+      window.yandexMetrikaStarted = true;
+      window.dataLayer = window.dataLayer || [];
+      ym(yandexMetrikaId, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true, defer:true, trackHash:false});
+    };
+  </script>
+  <!-- /Yandex.Metrika counter -->
+  <script>
+    /* Ранний старт: токен и данные страницы запрашиваются параллельно с загрузкой JS,
+       главная картинка товара предзагружается. Приложение подхватывает эти запросы (src/api/client.ts). */
+    (function () {
+      // демо-версия (npm run preview:static) работает без сервера — ранний старт не нужен
+      if ('1' === '1') return;
+      try {
+        var H = { 'content-type': 'application/json', 'package': 'lite_pack', 'system': 'windows', 'app-type': 'web', 'client-id': '', 'locale': 'ru-RU', 'system-version': '', 'version': '1.0.18', 'build-number': '70' };
+        var get = function (k) { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } };
+        var s = get('lp.session');
+        if (s && s.clientId) H['client-id'] = s.clientId;
+        var tok;
+        if (s && s.accessToken) tok = Promise.resolve(s.accessToken);
+        else {
+          window.__lpSignup = fetch('/api/v1/auth/signupAnonymous', { method: 'POST', headers: H, body: JSON.stringify({ appId: 'lite_pack', clientId: null, appType: 'shop' }) })
+            .then(function (r) { if (!r.ok) throw r; return r.json(); });
+          tok = window.__lpSignup.then(function (j) { return j.accessToken; });
+        }
+        var cp = get('lp.catalogParams');
+        if (!cp) { var reg = get('lp.region'); cp = reg ? { regionId: reg.regionId } : {}; }
+        var qs = function (o) { var u = new URLSearchParams(); for (var k in o) if (o[k] != null && o[k] !== '') u.set(k, o[k]); var q = u.toString(); return q ? '?' + q : ''; };
+        var path = location.pathname, m, url;
+        if ((m = path.match(/^\/category\/([^/]+)\/?$/))) url = '/api/v1/categories/' + encodeURIComponent(m[1]) + '/products' + qs(cp);
+        else if ((m = path.match(/^\/product\/([^/]+)\/?$/))) url = '/api/v1/products/' + encodeURIComponent(m[1]) + qs(cp);
+        else if (path === '/') url = '/api/v1/categories' + qs(cp);
+        if (!url) return;
+        window.__lpPre = {};
+        var req = window.__lpPre[url] = tok
+          .then(function (t) { var h = {}; for (var k in H) h[k] = H[k]; h.authorization = 'Bearer ' + t; return fetch(url, { headers: h }); })
+          .then(function (r) { if (!r.ok) throw r; return r.json(); });
+        req.then(function (j) {
+          var list = j.product ? [j.product] : (j.products || []).filter(function (p) { return !p.outOfStock && p.quantityOfUnitsLeft > 0; }).slice(0, 2);
+          list.forEach(function (p) {
+            var u = p.info && p.info.imageUrls && p.info.imageUrls[0];
+            if (!u || !/^https:\/\/storage\.yandexcloud\.net\//.test(u)) return;
+            var l = document.createElement('link');
+            l.rel = 'preload'; l.as = 'image'; l.setAttribute('fetchpriority', 'high');
+            var id = '1' === '1' && (u.match(/\/(?:products|categories)\/([0-9a-f]{32})(?:\.(?:png|jpe?g|webp))?$/i) || [])[1];
+            var big = id ? '/pimg/1000/' + id.toLowerCase() + '.webp' : '/506,fit/' + u;
+            var small = id ? '/pimg/480/' + id.toLowerCase() + '.webp 480w, ' + big + ' 1000w' : '/180,fit/' + u + ' 180w, ' + big + ' 506w';
+            if (j.product) l.href = big;
+            else { l.setAttribute('imagesrcset', small); l.setAttribute('imagesizes', '(min-width: 1280px) 220px, (min-width: 768px) 30vw, 45vw'); }
+            document.head.appendChild(l);
+          });
+        }, function () {});
+      } catch (e) {}
+    })();
+  </script>
+  <style>
+    /* Критичный CSS: фон и каркас до загрузки скриптов, без белой вспышки */
+    html { background: #f6f3ec; }
+    body { margin: 0; background: #f6f3ec; color: #00201e; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+    .boot { min-height: 100vh; display: grid; place-items: center; }
+    .boot img { width: 120px; height: auto; }
+  </style>
+  <script type="module" crossorigin src="/lite-pack-demo/assets/index-DWD8GVIa.js"></script>
+  <link rel="modulepreload" crossorigin href="/lite-pack-demo/assets/vendor-BYXRRVZE.js">
+  <link rel="stylesheet" crossorigin href="/lite-pack-demo/assets/index-CuyepBbD.css">
+</head>
+<body>
+  <div id="root">
+    <div class="boot"><img src="/lite-pack-demo/brand/logo.webp" alt="Лайт-Пак" width="451" height="237"></div>
+  </div>
+  <noscript>
+    <p style="padding:24px;text-align:center">Для работы интернет-магазина Лайт-Пак включите JavaScript. Телефоны: 8 (922) 687-15-67 (Ижевск), 8 (927) 955-55-91 (Нефтекамск).</p>
+  </noscript>
+</body>
+</html>

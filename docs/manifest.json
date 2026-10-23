@@ -1,0 +1,26 @@
+{
+  "name": "ЛайтПак",
+  "short_name": "ЛайтПак",
+  "start_url": "/lite-pack-demo/",
+  "display": "standalone",
+  "background_color": "#F6F3EC",
+  "theme_color": "#00671E",
+  "description": "Производство и продажа упаковки",
+  "orientation": "portrait-primary",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "/lite-pack-demo/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/lite-pack-demo/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "scope": "/lite-pack-demo/"
+}
