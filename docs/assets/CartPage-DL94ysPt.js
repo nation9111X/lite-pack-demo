@@ -1,0 +1,1 @@
+import"./vendor-BYXRRVZE.js";import{b as a,d as e,C as t}from"./index-C0cmH0Om.js";function s(){return a({title:"Корзина",noindex:!0}),e("div",{className:"container page",style:{maxWidth:1200},children:[e("header",{className:"page__head",children:e("h1",{className:"page__title",children:"Корзина"})}),e(t,{page:!0})]})}export{s as default};
