@@ -1,0 +1,13 @@
+User-agent: *
+Disallow: /profile
+Disallow: /orders
+Disallow: /order/
+Disallow: /cart
+Disallow: /checkout
+Disallow: /paymentForm
+Disallow: /paymentCompleted
+Disallow: /add-company
+Disallow: /api/
+Allow: /
+
+Sitemap: https://lite-pack.ru/sitemap.xml

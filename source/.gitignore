@@ -1,0 +1,12 @@
+node_modules
+dist
+tools/node_modules
+tools/*.png
+tools/*.json
+!tools/package.json
+tools/*.log
+*.local
+dist-ssr
+public/pimg
+tools/.cache
+docs/review/*.png

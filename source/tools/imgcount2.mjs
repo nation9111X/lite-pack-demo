@@ -1,0 +1,10 @@
+import { chromium } from 'playwright';
+const url = process.argv[2];
+const b = await chromium.launch();
+const ctx = await b.newContext({ viewport: { width: 412, height: 823 }, deviceScaleFactor: 1.75, isMobile: true, javaScriptEnabled: false });
+await ctx.route('**/assets/*.css', async (r) => { const res = await r.fetch(); const body = (await res.text()) + '\n.pgrid>.pcard,.rsec,.steps,.contacts-band,.apps{content-visibility:visible!important}'; r.fulfill({ response: res, body }); });
+const p = await ctx.newPage(); let n = 0;
+p.on('requestfinished', (r) => { if (/,fit\//.test(r.url())) n++; });
+await p.goto(url, { waitUntil: 'networkidle' }); await p.waitForTimeout(1500);
+console.log('без content-visibility, images:', n);
+await b.close();

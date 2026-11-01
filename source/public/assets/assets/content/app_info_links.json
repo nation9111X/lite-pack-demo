@@ -1,0 +1,49 @@
+{
+	"iosapp": "https://apps.apple.com/ru/app/litepack_shop/6452720286",
+	"androidapp": "https://play.google.com/store/apps/details?id=com.litepack.shop",
+	"companyDetails": {
+		"actualAddress": {
+			"text": "452680, РБ, г.Нефтекамск ул.Индустриальная д.6"
+		},
+		"inn": "0264076443",
+		"kpp": "026401001",
+		"legalAddress": {
+			"text": "452680, РБ, г.Нефтекамск ул.Индустриальная д.6"
+		},
+		"name": "ООО «Лайт Пак Групп»",
+		"ogrn": "1180280067219",
+		"phone": "8 (927) 955-55-91"
+	},
+	"contactUsList_0": [
+		{
+			"address": {
+				"city": "Ижевск",
+				"id": "",
+				"lat": 56.798433,
+				"lng": 53.194889,
+				"text": "г. Ижевск, ул. Пойма 33Б, Удмуртия",
+				"withoutCity": "ул. Пойма 33Б, Удмуртия"
+			},
+			"email": "elena.dunaeva.litepack@mail.ru",
+			"phone": "8 (922) 687-15-67",
+			"tabName": "Ижевск",
+			"telegram": "",
+			"whatsup": ""
+		},
+		{
+			"address": {
+				"city": "Нефтекамск",
+				"id": "",
+				"lat": 56.098195,
+				"lng": 54.266921,
+				"text": "г. Нефтекамск, ул. Промышленная 5, Башкортостан",
+				"withoutCity": "ул. Промышленная 5, Башкортостан"
+			},
+			"email": "lite-pack@mail.ru",
+			"phone": "8 (927) 955-55-91",
+			"tabName": "Нефтекамск",
+			"telegram": "",
+			"whatsup": ""
+		}
+	]
+}

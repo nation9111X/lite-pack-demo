@@ -1,0 +1,94 @@
+.addr-sheet { display: grid; gap: 16px; }
+.addr-sheet__lead { font-size: 0.9375rem; }
+
+/* Сегментированный переключатель: белая «таблетка» переезжает к выбранной вкладке */
+.seg {
+  --n: 2; --i: 0; --gap: 4px;
+  position: relative; display: grid; grid-template-columns: repeat(var(--n), 1fr); gap: var(--gap); padding: 4px;
+  border-radius: var(--r-pill); background: var(--paper); box-shadow: inset 0 0 0 1px var(--line);
+}
+.seg::before {
+  content: ''; position: absolute; top: 4px; bottom: 4px; left: 4px; z-index: 0;
+  width: calc((100% - 8px - (var(--n) - 1) * var(--gap)) / var(--n));
+  border-radius: var(--r-pill); background: var(--card); box-shadow: 0 2px 0 rgba(0, 32, 30, 0.04), 0 6px 16px -6px rgba(0, 32, 30, 0.25);
+  transform: translateX(calc(var(--i) * (100% + var(--gap)))); transition: transform 420ms var(--ease-spring);
+}
+.seg__btn {
+  position: relative; z-index: 1; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; border-radius: var(--r-pill); font-weight: 650; color: var(--ink-2);
+  transition: color 220ms var(--ease), background-color 220ms var(--ease), transform 260ms var(--ease-spring);
+}
+.seg__btn svg { transition: transform 300ms var(--ease-spring); }
+@media (hover: hover) {
+  .seg__btn:not(.is-on):hover { color: var(--brand-deep); background: var(--ring); }
+  .seg__btn:not(.is-on):hover svg { transform: translateY(-2px) rotate(-6deg) scale(1.1); }
+}
+.seg__btn:active { transform: scale(0.97); }
+.seg__btn.is-on { color: var(--brand-deep); }
+
+.addr-saved { display: grid; gap: 8px; }
+.addr-saved ul { display: grid; gap: 8px; }
+.addr-item { display: flex; align-items: center; gap: 4px; border-radius: var(--r-md); border: 1.5px solid var(--line); background: var(--card); }
+.addr-item.is-active { border-color: var(--brand-deep); background: var(--tint-soft); }
+.addr-item__main { flex: 1; display: flex; align-items: center; gap: 12px; padding: 12px 14px; text-align: left; min-width: 0; }
+.addr-item__radio { flex: none; width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--line-strong); display: grid; place-items: center; }
+.addr-item.is-active .addr-item__radio { border-color: var(--primary); }
+.addr-item.is-active .addr-item__radio::after { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--primary); }
+.addr-item__text { display: grid; gap: 2px; font-size: 0.9375rem; min-width: 0; }
+.addr-item__warn { color: var(--signal); font-size: 0.8125rem; }
+.addr-item .spinner { width: 20px; height: 20px; margin-left: auto; }
+
+.addr-new { display: grid; gap: 12px; }
+.addr-new__row { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+.addr-new__geo { width: 52px; min-height: 52px; padding: 0; border-radius: var(--r-md); }
+.addr-new__geo .spinner { width: 20px; height: 20px; }
+.addr-new__hint { font-size: 0.8125rem; }
+.addr-sugg { display: grid; border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden; background: var(--card); }
+.addr-sugg li + li { border-top: var(--dash); }
+.addr-sugg button { display: flex; align-items: flex-start; gap: 10px; width: 100%; padding: 12px 14px; text-align: left; font-size: 0.9375rem; }
+.addr-sugg button svg { flex: none; margin-top: 2px; color: var(--brand-deep); }
+.addr-sugg button:hover { background: var(--paper); }
+.addr-sugg__state { display: grid; place-items: center; padding: 16px; }
+.addr-extra { display: grid; gap: 14px; padding: 16px; border-radius: var(--r-md); background: var(--paper); }
+.addr-extra__picked { display: flex; gap: 8px; font-weight: 600; }
+.addr-extra__picked svg { flex: none; color: var(--brand-deep); margin-top: 2px; }
+.addr-extra__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+
+.deps { display: grid; gap: 12px; }
+.dep { display: grid; gap: 10px; padding: 16px; border-radius: var(--r-lg); background: var(--card); border: 1.5px solid var(--line); }
+.dep__title { font-size: 1.0625rem; font-family: var(--font-text); font-weight: 700; letter-spacing: 0; }
+.dep__addr { color: var(--ink-2); font-size: 0.9375rem; }
+.dep__hours { display: grid; gap: 2px; font-size: 0.8125rem; }
+.dep.is-closed { background: var(--paper); }
+
+/* Ховеры элементов выбора адреса */
+.addr-item { transition: border-color 200ms var(--ease), box-shadow 220ms var(--ease), transform 260ms var(--ease-spring); }
+@media (hover: hover) { .addr-item:not(.is-active):hover { border-color: var(--brand-deep); box-shadow: 0 8px 18px -12px var(--glow); transform: translateY(-2px); } }
+.addr-item__radio { transition: border-color 200ms, transform 260ms var(--ease-spring); }
+.addr-item:hover .addr-item__radio { border-color: var(--brand-deep); transform: scale(1.1); }
+.addr-sugg button { transition: background-color 160ms, padding-left 220ms var(--ease); }
+.addr-sugg button:hover { padding-left: 20px; color: var(--brand-deep); }
+.dep { transition: border-color 200ms var(--ease), box-shadow 220ms var(--ease), transform 260ms var(--ease-spring); }
+@media (hover: hover) { .dep:not(.is-closed):hover { border-color: var(--brand-deep); box-shadow: 0 12px 24px -16px var(--glow); transform: translateY(-2px); } }
+
+/* поиск над картой: подсказки всплывают поверх карты */
+.addr-new__box { position: relative; }
+.addr-new__row.is-solo { grid-template-columns: 1fr; }
+.addr-sugg--float {
+  position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 20; max-height: 280px; overflow-y: auto;
+  box-shadow: var(--shadow-3); animation: sugg-in 220ms var(--ease) both;
+}
+@keyframes sugg-in { from { opacity: 0; transform: translateY(-6px); } }
+.addr-extra { transition: opacity 200ms; animation: sugg-in 260ms var(--ease) both; }
+.addr-extra.is-busy { opacity: 0.6; }
+.addr-extra__zone { display: inline-flex; align-items: center; gap: 6px; justify-self: start; padding: 5px 10px; border-radius: var(--r-pill); background: var(--accent-tint); color: var(--brand-deep); font-size: 0.8125rem; font-weight: 650; }
+.dep.is-focus:not(.is-closed) { border-color: var(--primary); }
+.dep.is-focus.is-closed { border-color: var(--kraft); }
+.addr-sugg button > span { display: grid; gap: 2px; }
+.addr-sugg small { font-size: 0.75rem; font-weight: 600; }
+.addr-sugg small.is-in { color: var(--brand-deep); }
+.addr-sugg small.is-out { color: var(--ink-3); }
+
+/* Переключатель региона */
+.regsw { display: grid; gap: 6px; }
+.regsw__seg.is-empty::before { opacity: 0; }

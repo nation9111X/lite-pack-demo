@@ -1,0 +1,24 @@
+import {anon,get,BASE,H} from './api.mjs';
+const a=await anon();const T=a.accessToken;
+const post=async(p,b,m='POST')=>{const r=await fetch(BASE+p,{method:m,headers:{...H,authorization:'Bearer '+T},body:b?JSON.stringify(b):undefined});const t=await r.text();return {status:r.status,body:t}};
+const cat='8b23600b-d61b-415f-85b9-952b011d7932';
+const p0=(await get(`v1/categories/${cat}/products`,T)).json.products;
+const pU=(await get(`v1/categories/${cat}/products?regionId=e02392242878498087b248fe5e21e043`,T)).json.products;
+const pB=(await get(`v1/categories/${cat}/products?regionId=420be176948f45a9a0a6a110a1235ebd`,T)).json.products;
+const pD=(await get(`v1/categories/${cat}/products?departmentId=9d3b34f8dcc4420ba0be550ae7420f85`,T)).json.products;
+const pDU=(await get(`v1/categories/${cat}/products?departmentId=8a6e7295d4cd4b3784edaf6729255035`,T)).json.products;
+const f=(ps)=>ps.slice(0,3).map(p=>p.price+'/'+p.quantityOfUnitsLeft).join(' ')+' n='+ps.length;
+console.log('none',f(p0));console.log('U',f(pU));console.log('B',f(pB));console.log('depB',f(pD));console.log('depU',f(pDU));
+// cart semantics: add then set 0
+const dep=(await get('v1/deliveries/departments',T)).json.departments[0];
+const ad=JSON.parse((await post('v1/users/addresses',{departmentId:dep.id})).body);
+const aid=ad.id;
+const pid=pB[0].id, q=pB[0].info.packageInfo.element.quantity||1;
+let c=JSON.parse((await post('v1/cart',{userAddressId:aid,items:[{productId:pid,quantityOfUnits:q}]})).body);console.log('add',c.cart.items.length,c.cart.items[0]?.quantityOfUnits, JSON.stringify(c.appMessage));
+c=JSON.parse((await post('v1/cart',{userAddressId:aid,items:[{productId:pid,quantityOfUnits:q*2}]})).body);console.log('set2x',c.cart.items[0]?.quantityOfUnits);
+c=JSON.parse((await post('v1/cart',{userAddressId:aid,items:[{productId:pid,quantityOfUnits:q+1}]})).body);console.log('nonmultiple',c.cart.items[0]?.quantityOfUnits, JSON.stringify(c.appMessage));
+c=JSON.parse((await post('v1/cart',{userAddressId:aid,items:[{productId:pid,quantityOfUnits:0}]})).body);console.log('zero',c.cart.items.length);
+const pr=await post('v1/cart',{userAddressId:aid,promoCode:'TEST123'});console.log('promo',pr.status,pr.body.slice(0,300));
+const del=await post('v1/cart',null,'DELETE');console.log('delete',del.status,del.body.slice(0,200));
+const g=await get('v1/cart?addressId='+aid,T);console.log('after delete',g.status,JSON.stringify(g.json).slice(0,200));
+const s=await post('v1/users/addresses/search',{text:'Ижевск Пушкинская 100'});console.log('addrsearch',s.status,s.body.slice(0,900));

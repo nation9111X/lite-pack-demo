@@ -1,0 +1,162 @@
+/* ---------- Сетка товаров ---------- */
+.pgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+@media (min-width: 600px) { .pgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; } }
+@media (min-width: 1100px) { .pgrid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; } }
+@media (min-width: 1360px) { .pgrid--wide { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+
+/* ---------- Карточка-этикетка ---------- */
+.pcard {
+  --notch: 9px;
+  position: relative; display: flex; flex-direction: column; min-width: 0;
+  background: var(--card); border-radius: var(--r-lg); padding: 10px 10px 12px;
+  box-shadow: var(--shadow-1);
+  transition: transform var(--t-med) var(--ease), box-shadow var(--t-med) var(--ease);
+}
+@media (hover: hover) {
+  .pcard:hover { --lift: -6px; box-shadow: var(--shadow-2); }
+  .pcard:hover .pcard__stub::before { border-top-color: var(--kraft); }
+  .pcard:hover .pcard__media img { transform: scale(1.07) translateY(-3px); }
+}
+.pcard__media {
+  position: relative; aspect-ratio: 1; border-radius: var(--r-md); background: var(--plate);
+  display: grid; place-items: center; overflow: hidden;
+}
+.pcard__media img { position: absolute; inset: 7%; width: 86%; height: 86%; object-fit: contain; transition: transform var(--t-slow) var(--ease); mix-blend-mode: multiply; }
+.pcard__noimg { color: #cfc6b4; }
+.pcard__sale {
+  position: absolute; top: 8px; left: 8px; padding: 3px 8px; border-radius: var(--r-pill);
+  background: var(--signal); color: #fff; font-weight: 800; font-size: 0.75rem;
+}
+.pcard__cz {
+  position: absolute; bottom: 8px; left: 8px; padding: 2px 7px; border-radius: var(--r-xs);
+  background: #ffd600; color: #1a1a1a; font-weight: 700; font-size: 0.6875rem;
+}
+.pcard__body { padding: 10px 4px 0; flex: 1; }
+.pcard__title { font-family: var(--font-text); font-size: 0.9375rem; font-weight: 550; letter-spacing: 0; line-height: 1.32; }
+.pcard__title a { text-decoration: none; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.pcard__title a::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
+.pcard__title a:focus-visible { outline: none; }
+.pcard__title a:focus-visible::after { outline: 3px solid var(--brand-deep); outline-offset: 2px; }
+.pcard__stock { margin-top: 6px; color: var(--ink-3); font-size: 0.75rem; line-height: 1.35; }
+.pcard.is-off .pcard__media img { opacity: 0.45; filter: grayscale(0.6); }
+
+/* Линия отрыва с полукруглыми вырезами */
+.pcard__stub { position: relative; margin: 12px -10px 0; padding: 12px 10px 0; display: grid; gap: 10px; }
+.pcard__stub::before {
+  content: ''; position: absolute; top: 0; left: calc(var(--notch) + 4px); right: calc(var(--notch) + 4px);
+  border-top: var(--dash); transition: border-color var(--t-med) var(--ease);
+}
+.pcard__stub::after {
+  content: ''; position: absolute; top: calc(var(--notch) * -1); left: 0; right: 0; height: calc(var(--notch) * 2);
+  background:
+    radial-gradient(circle at left center, var(--paper) var(--notch), transparent calc(var(--notch) + 0.5px)) left / 50% 100% no-repeat,
+    radial-gradient(circle at right center, var(--paper) var(--notch), transparent calc(var(--notch) + 0.5px)) right / 50% 100% no-repeat;
+  pointer-events: none;
+}
+.pcard__stub > * { position: relative; z-index: 1; }
+
+/* ---------- Цена ---------- */
+.price { display: grid; gap: 2px; min-width: 0; }
+.price__main { display: flex; align-items: baseline; flex-wrap: wrap; gap: 2px 6px; }
+.price__main b { font-family: var(--font-display); font-size: 1.1875rem; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.price__unit { font-size: 0.8125rem; color: var(--ink-3); font-weight: 600; margin-left: -4px; }
+.price__old { color: var(--ink-3); font-size: 0.8125rem; }
+.price__pack { color: var(--ink-2); font-size: 0.75rem; }
+.price--big .price__main b { font-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.375rem); }
+.price--big .price__unit { font-size: 1rem; }
+.price--big .price__pack { font-size: 0.875rem; }
+
+/* ---------- Кнопка «В корзину» и степпер ---------- */
+.addctl {
+  position: relative; z-index: 2; overflow: hidden; isolation: isolate;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 44px;
+  padding: 10px 14px; border-radius: var(--r-pill); font-weight: 700; font-size: 0.9375rem;
+  transition: background-color 220ms var(--ease), transform 280ms var(--ease-spring), box-shadow 280ms var(--ease);
+}
+.addctl--add { background: var(--primary); color: #fff; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14); }
+/* блик */
+.addctl--add::after {
+  content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.32) 50%, transparent 65%);
+  transform: translateX(-110%); transition: transform 700ms var(--ease);
+}
+.addctl__icon {
+  display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: rgba(255, 255, 255, 0.18);
+  transition: transform 420ms var(--ease-spring), background-color 220ms;
+}
+.addctl__label { transition: transform 320ms var(--ease-spring); }
+@media (hover: hover) {
+  .addctl--add:hover {
+    background: var(--primary-hover); transform: translateY(-2px) scale(1.035);
+    box-shadow: 0 12px 22px -12px var(--glow), 0 0 0 4px var(--ring);
+  }
+  .addctl--add:hover::after { transform: translateX(110%); }
+  .addctl--add:hover .addctl__icon { transform: rotate(180deg) scale(1.12); background: rgba(255, 255, 255, 0.28); }
+  .addctl--add:hover .addctl__label { transform: translateX(2px); }
+}
+.addctl--add:active { transform: scale(0.94); transition-duration: 90ms; box-shadow: none; }
+.addctl--off { background: var(--paper); color: var(--ink-3); cursor: default; }
+.addctl--lg { min-height: 56px; font-size: 1.0625rem; }
+.addctl--lg .addctl__icon { width: 26px; height: 26px; }
+
+.stepper {
+  position: relative; z-index: 2; overflow: hidden; display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; width: 100%; min-height: 44px;
+  border-radius: var(--r-pill); background: var(--stepper-bg); color: var(--stepper-ink);
+  box-shadow: inset 0 0 0 1.5px var(--stepper-line);
+  animation: stepper-in 520ms var(--ease-spring);
+}
+@keyframes stepper-in {
+  0% { transform: scale(0.9); }
+  60% { transform: scale(1.03); }
+  100% { transform: none; }
+}
+.stepper--lg { min-height: 56px; grid-template-columns: 56px 1fr 56px; }
+.stepper__btn {
+  position: relative; overflow: hidden; display: grid; place-items: center; height: 100%; min-height: 44px; border-radius: var(--r-pill);
+  transition: background-color 180ms var(--ease), transform 240ms var(--ease-spring);
+}
+@media (hover: hover) { .stepper__btn:hover:not(:disabled) { background: var(--ring); } .stepper__btn:hover:not(:disabled) svg { transform: scale(1.18); } }
+.stepper__btn svg { transition: transform 260ms var(--ease-spring); }
+.stepper__btn:active:not(:disabled) { transform: scale(0.88); }
+.stepper__btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.stepper__val { text-align: center; font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; }
+.stepper__val small { font-weight: 600; font-size: 0.8125rem; }
+/* цифры прокручиваются, как на счётчике */
+.ticker { display: inline-block; }
+.ticker--up { animation: tick-up 320ms var(--ease-spring); }
+.ticker--down { animation: tick-down 320ms var(--ease-spring); }
+@keyframes tick-up { from { transform: translateY(70%); opacity: 0; } }
+@keyframes tick-down { from { transform: translateY(-70%); opacity: 0; } }
+/* «✓ Добавлено» на мгновение поверх степпера */
+.stepper__done {
+  position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center; gap: 6px;
+  border-radius: inherit; background: var(--primary); color: #fff; font-weight: 700; pointer-events: none;
+  animation: done-flash 1100ms var(--ease) forwards;
+}
+.stepper__done svg { animation: done-check 500ms var(--ease-spring); }
+@keyframes done-flash { 0% { opacity: 0; transform: scale(0.9); } 12% { opacity: 1; transform: none; } 70% { opacity: 1; } 100% { opacity: 0; transform: translateY(-40%); } }
+@keyframes done-check { from { transform: scale(0) rotate(-45deg); } }
+
+/* конфетти из lib/motion.ts burst() */
+.burst-bit { position: fixed; z-index: 2000; pointer-events: none; border-radius: 2px; will-change: transform, opacity; }
+
+.pcard--skel { box-shadow: none; }
+
+/* Распаковка: карточка приезжает закрытой коробкой, пока фото грузится; клапаны расходятся, товар приподнимается */
+.pcard.boxed .pcard__media { perspective: 620px; }
+.pcard.boxed .pcard__media::before, .pcard.boxed .pcard__media::after {
+  content: ''; position: absolute; top: 0; bottom: 0; width: 50.5%; z-index: 3; pointer-events: none;
+  box-shadow: inset 0 0 0 1px rgba(122, 86, 44, 0.3);
+}
+.pcard.boxed .pcard__media::before {
+  left: 0; transform-origin: 0 50%;
+  background: linear-gradient(90deg, transparent 0 88%, var(--primary) 88%) , repeating-linear-gradient(112deg, rgba(110, 76, 34, 0.07) 0 1.5px, transparent 1.5px 4.5px), linear-gradient(160deg, #dcbf93, #c9a273);
+}
+.pcard.boxed .pcard__media::after {
+  right: 0; transform-origin: 100% 50%;
+  background: linear-gradient(90deg, var(--primary) 0 12%, transparent 12%), repeating-linear-gradient(22deg, rgba(110, 76, 34, 0.07) 0 1.5px, transparent 1.5px 4.5px), linear-gradient(200deg, #d6b686, #c29c6e);
+}
+.pcard.boxed .pcard__media img { transform: translateY(12px) scale(0.88); }
+.pcard.boxed.is-open .pcard__media::before { transform: rotateY(-118deg); opacity: 0; transition: transform 620ms cubic-bezier(0.5, 0, 0.2, 1), opacity 160ms linear 430ms; }
+.pcard.boxed.is-open .pcard__media::after { transform: rotateY(118deg); opacity: 0; transition: transform 620ms cubic-bezier(0.5, 0, 0.2, 1), opacity 160ms linear 430ms; }
+.pcard.boxed.is-open .pcard__media img { transform: none; transition: transform 620ms var(--ease-spring) 90ms; }

@@ -1,0 +1,132 @@
+/* ---------- Появление при прокрутке (lib/alive.ts, lib/motion.ts) ---------- */
+.reveal, .rv { opacity: 0; transform: translateY(26px) scale(0.965); }
+.reveal { transition: opacity 620ms var(--ease), transform 720ms var(--ease); }
+.reveal.is-in { opacity: 1; transform: none; }
+.rv.rv-in {
+  opacity: 1; transform: none;
+  transition: opacity 560ms var(--ease) var(--rv-d, 0ms), transform 720ms var(--ease) var(--rv-d, 0ms);
+}
+
+/* ---------- Заголовки разделов: зелёная лента вытягивается под текстом ---------- */
+.section__title { position: relative; }
+.section__head .section__title::after {
+  content: ''; display: block; width: 56px; height: 4px; margin-top: 8px; border-radius: 2px; transform-origin: 0 50%;
+  background: repeating-linear-gradient(90deg, var(--primary) 0 12px, var(--kraft) 12px 16px);
+}
+.section__head.rv .section__title::after { transform: scaleX(0); }
+.section__head.rv-in .section__title::after { transform: none; transition: transform 800ms var(--ease) 180ms; }
+
+/* ---------- Нажатие пальцем: карточка наклоняется к пальцу, блик в точке касания ---------- */
+.is-press {
+  transform: perspective(700px) rotateX(var(--tx, 0deg)) rotateY(var(--ty, 0deg)) scale(0.975) !important;
+  transition: transform 130ms ease-out !important;
+}
+.pcard.is-press::before, .stile.is-press::before, .subtile.is-press::before { opacity: 1; mix-blend-mode: soft-light; }
+.scn__tile.is-press { border-color: var(--brand-deep); }
+
+/* ---------- Первый экран ---------- */
+.hero__stamp, .hero__lead, .hero__cta, .hero__stats { animation: rise-in 640ms var(--ease) backwards; }
+.hero__title { animation: rise-in 720ms var(--ease) 60ms backwards; }
+.hero__lead { animation-delay: 160ms; }
+.hero__cta { animation-delay: 230ms; }
+.hero__stats { animation-delay: 300ms; }
+.hero__art { animation: art-in 900ms var(--ease) 120ms backwards; }
+@keyframes rise-in { from { opacity: 0; transform: translateY(18px); } }
+@keyframes art-in { from { opacity: 0; transform: translateY(26px) scale(0.92); } }
+/* Плашка «упаковки» ложится как штамп */
+.hero__tag { animation: tag-stamp 620ms var(--ease-spring) 420ms backwards; }
+@keyframes tag-stamp { from { opacity: 0; transform: rotate(-11deg) scale(1.5); } }
+
+/* Цифры каталога на первом экране */
+.hero__stats { margin-top: 18px; max-width: 520px; border-block: var(--dash); }
+
+/* Основная кнопка: блик пробегает сам, без наведения */
+.hero__cta .btn:first-child::after { animation: btn-sheen 4.8s var(--ease) 1.6s infinite; will-change: transform; }
+@keyframes btn-sheen { 0%, 64% { transform: translateX(-110%); } 92%, 100% { transform: translateX(110%); } }
+/* Вторая кнопка: по кромке бежит зелёно-крафтовая линия. Крутится вложенный квадрат, маска оставляет от него только кромку:
+   это работает на видеокарте и не занимает главный поток */
+.hero__cta .btn--ghost {
+  --btn-bg: var(--card); --btn-bd: transparent; --btn-bd-h: transparent;
+  background-clip: padding-box; box-shadow: inset 0 0 0 1.5px var(--line-strong);
+}
+.btn__ring {
+  position: absolute; inset: 0; border-radius: inherit; padding: 1.5px; overflow: hidden; pointer-events: none;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+.btn__ring i {
+  position: absolute; left: 50%; top: 50%; width: 240%; aspect-ratio: 1; translate: -50% -50%;
+  background: conic-gradient(transparent 0 62%, var(--kraft) 74%, var(--brand-deep) 88%, transparent 100%);
+  animation: ring-turn 4.5s linear infinite;
+}
+@keyframes ring-turn { to { rotate: 360deg; } }
+.hero__cta-short { display: none; }
+
+/* Первый экран ушёл: блики и кромка не держат слои на видеокарте */
+.hero.is-away .btn__ring, .hero.is-away .hero__hint { display: none; }
+.hero.is-away .hero__tag::after, .hero.is-away .btn::after { animation: none; }
+
+/* Подсказка у коробки: исчезает после первого касания */
+.hero__hint {
+  position: absolute; left: 50%; bottom: 6px; translate: -50% 0; display: none; align-items: center; gap: 6px; padding: 4px 10px; border-radius: var(--r-pill);
+  background: var(--glass); border: 1px solid var(--glass-line); font-size: 0.6875rem; color: var(--ink-3); white-space: nowrap; pointer-events: none;
+  transition: opacity 300ms; animation: hint-sway 2.4s ease-in-out infinite;
+}
+.is-touched ~ .hero__hint { opacity: 0; }
+@keyframes hint-sway { 50% { transform: translateX(6px); } }
+@media (hover: none) { .hero__hint { display: inline-flex; } }
+
+/* ---------- Плитки каталога ---------- */
+/* Картинка раздела плывёт при прокрутке: на телефоне это заменяет реакцию на курсор */
+@supports (animation-timeline: view()) {
+  @media (hover: none) {
+    .ctile__img.drift, .stile img.drift { animation: tile-drift linear both; animation-timeline: view(); }
+    @keyframes tile-drift { from { translate: 0 22px; rotate: 4deg; scale: 0.94; } to { translate: 0 -14px; rotate: -4deg; scale: 1.04; } }
+  }
+}
+.ctile__go { transition: background var(--t-med), color var(--t-med), transform 320ms var(--ease-spring); }
+.ctile:active .ctile__go, .ctile.is-press .ctile__go { background: var(--primary); color: #fff; transform: rotate(-45deg); }
+
+/* ---------- Кнопки на касание ---------- */
+@media (hover: none) {
+  .btn:active::after, .addctl--add:active::after { transform: translateX(110%); transition-duration: 500ms; }
+  .chip:active { background: var(--accent-tint); color: var(--brand-deep); border-color: var(--brand-deep); }
+}
+
+/* ---------- Плавные переходы между страницами ---------- */
+::view-transition-group(hdr), ::view-transition-group(bnav) { animation: none; z-index: 10; }
+::view-transition-old(hdr), ::view-transition-old(bnav) { display: none; }
+::view-transition-new(hdr), ::view-transition-new(bnav) { animation: none; }
+.hdr { view-transition-name: hdr; }
+.bnav { view-transition-name: bnav; }
+/* Фото товара перелетает из карточки на страницу товара */
+::view-transition-group(pphoto) { animation-duration: 380ms; animation-timing-function: var(--ease); z-index: 5; }
+::view-transition-old(pphoto), ::view-transition-new(pphoto) { animation-duration: 380ms; height: 100%; object-fit: contain; mix-blend-mode: normal; }
+/* Смена темы: кругом от точки касания (анимацию задаёт lib/theme.ts) */
+.vt-theme::view-transition-old(root), .vt-theme::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+.vt-theme::view-transition-new(root) { z-index: 20; }
+.vt-theme::view-transition-group(hdr), .vt-theme::view-transition-group(bnav) { display: none; }
+
+/* ---------- Тёмная тема: детали ---------- */
+:root[data-theme='dark'] .hdr__logo, :root[data-theme='dark'] .logo { background: #fff; padding: 3px 6px; border-radius: 10px; }
+:root[data-theme='dark'] .hdr__logo img { height: 34px; }
+:root[data-theme='dark'] .pcard, :root[data-theme='dark'] .ctile, :root[data-theme='dark'] .stile, :root[data-theme='dark'] .subtile, :root[data-theme='dark'] .office { box-shadow: var(--shadow-1); }
+:root[data-theme='dark'] .hero::before { opacity: 0.3; }
+:root[data-theme='dark'] .ctile__img, :root[data-theme='dark'] .stile img, :root[data-theme='dark'] .subtile img { filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.5)); }
+:root[data-theme='dark'] .box-shadow { background: radial-gradient(closest-side, rgba(0, 0, 0, 0.6), transparent); }
+:root[data-theme='dark'] .box-scene::before { content: ''; position: absolute; inset: 6% 10%; border-radius: 50%; background: radial-gradient(closest-side, rgba(201, 165, 122, 0.16), transparent); pointer-events: none; }
+:root[data-theme='dark'] .scroll-tape { background: repeating-linear-gradient(90deg, var(--brand-deep) 0 18px, var(--kraft) 18px 26px); }
+:root[data-theme='dark'] .amap [class$='-ground-pane'] { filter: invert(1) hue-rotate(180deg) saturate(0.5) brightness(0.92) contrast(0.92); }
+:root[data-theme='dark'] .cartbox__fill { fill: var(--kraft); }
+:root[data-theme='dark'] .apps__card { background-color: var(--sticker); }
+:root[data-theme='dark'] .dlg::backdrop { background: rgba(0, 0, 0, 0.6); }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .rv { opacity: 1; transform: none; }
+  .btn__ring { display: none; }
+}
+/* Слабый телефон: вместо размытия сплошные панели, размытие пересчитывается на каждый кадр (lib/alive.ts) */
+:root.low, :root[data-theme='dark'].low { --glass: var(--card); }
+.low * { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+:root[data-theme='dark'] .seg::before { background: var(--accent-tint); box-shadow: inset 0 0 0 1px var(--stepper-line); }
+:root[data-theme='dark'] .mstamp:not(.mstamp--kraft):not(.mstamp--ink):not(.mstamp--img) { --st: var(--brand-deep); }

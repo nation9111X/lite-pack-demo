@@ -1,0 +1,37 @@
+.select { position: relative; display: inline-block; }
+.select__btn {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px 0 16px; border-radius: var(--r-pill);
+  background: var(--card); border: 1.5px solid var(--line); font-weight: 650; color: var(--ink);
+  transition: border-color 200ms var(--ease), box-shadow 220ms var(--ease), transform 260ms var(--ease-spring), background-color 200ms;
+}
+.select__icon { color: var(--brand-deep); transition: transform 320ms var(--ease-spring); }
+.select__caret { color: var(--ink-3); transition: transform 320ms var(--ease-spring); }
+@media (hover: hover) {
+  .select__btn:hover { border-color: var(--brand-deep); box-shadow: 0 0 0 4px var(--ring); transform: translateY(-1px); }
+  .select__btn:hover .select__icon { transform: rotate(90deg); }
+}
+.select.is-open .select__btn { border-color: var(--brand-deep); box-shadow: 0 0 0 4px var(--ring); }
+.select.is-open .select__caret { transform: rotate(180deg); color: var(--brand-deep); }
+
+.select__list {
+  position: absolute; right: 0; top: calc(100% + 8px); z-index: 30; min-width: 100%; width: max-content; max-width: 86vw;
+  padding: 6px; border-radius: var(--r-lg); background: var(--card); border: 1px solid var(--line);
+  box-shadow: 0 24px 48px -18px rgba(0, 32, 30, 0.38), 0 2px 0 rgba(0, 32, 30, 0.03);
+  transform-origin: top right; animation: select-in 240ms var(--ease-spring); outline: none;
+}
+/* метка приводки в углу — как на печатном листе */
+.select__list::before {
+  content: ''; position: absolute; top: -7px; right: 26px; width: 12px; height: 12px; background: var(--card);
+  border-left: 1px solid var(--line); border-top: 1px solid var(--line); transform: rotate(45deg);
+}
+@keyframes select-in { from { opacity: 0; transform: translateY(-6px) scale(0.96); } }
+.select__opt {
+  position: relative; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  min-height: 42px; padding: 8px 12px; border-radius: var(--r-md); cursor: pointer; font-weight: 550; color: var(--ink-2);
+  transition: background-color 160ms var(--ease), color 160ms var(--ease), padding-left 220ms var(--ease);
+  animation: opt-in 280ms var(--ease) backwards; animation-delay: var(--d, 0ms);
+}
+@keyframes opt-in { from { opacity: 0; transform: translateY(-4px); } }
+.select__opt.is-active { background: var(--accent-tint); color: var(--brand-deep); padding-left: 16px; }
+.select__opt.is-selected { color: var(--brand-deep); font-weight: 700; }
+.select__opt svg { color: var(--primary); }

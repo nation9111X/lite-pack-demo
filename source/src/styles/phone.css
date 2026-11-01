@@ -1,0 +1,210 @@
+/* ---------- Телефон и планшет: шапка и меню парят над страницей, контент проходит под ними ---------- */
+@media (max-width: 1023.98px) {
+  :root { --bottom-nav-h: 78px; }
+  html { scroll-padding-top: 96px; }
+  .hdr {
+    top: calc(6px + env(safe-area-inset-top, 0px)); margin: 6px 8px 0; border-radius: 20px;
+    border: 1px solid var(--glass-line); border-bottom: 1px solid var(--glass-line); background: var(--glass);
+    -webkit-backdrop-filter: blur(18px) saturate(1.6); backdrop-filter: blur(18px) saturate(1.6); box-shadow: var(--shadow-2);
+    transition: box-shadow var(--t-med) var(--ease), background-color var(--t-med);
+  }
+  .hdr::after { display: none; }
+  /* содержимое мягко уходит под шапку и меню, а не обрезается */
+  body::before, body::after { content: ''; position: fixed; left: 0; right: 0; z-index: 47; pointer-events: none; }
+  body::before { top: 0; height: calc(env(safe-area-inset-top, 0px) + 34px); background: linear-gradient(var(--paper) 30%, transparent); }
+  body::after { bottom: 0; height: calc(env(safe-area-inset-bottom, 0px) + 92px); background: linear-gradient(transparent, var(--paper) 78%); }
+  .hdr__bar { grid-template-columns: auto minmax(0, 1fr) auto auto; gap: 4px; min-height: 54px; padding-inline: 10px 6px; }
+  /* логотип на белой плашке, как в подвале: у картинки непрозрачный фон */
+  .hdr__logo { background: #fff; padding: 3px 6px; border-radius: 11px; }
+  .hdr__logo img, .hdr.is-compact .hdr__logo img, :root[data-theme='dark'] .hdr__logo img { height: 28px; }
+  .hdr__mobile-addr { max-width: 100%; }
+  .hdr__mobile-addr .addr-chip { min-height: 44px; padding: 4px 6px; gap: 6px; }
+  .hdr__mobile-addr .addr-chip__kind { font-size: 0.6875rem; }
+  .hdr__mobile-addr .addr-chip__value { font-size: 0.8125rem; max-width: 34vw; }
+  .hdr__mobile-theme .theme-btn { width: 40px; height: 40px; }
+  /* кнопка поиска появляется, когда строка поиска уехала вверх */
+  .hdr__find {
+    display: grid; place-items: center; width: 0; height: 40px; border-radius: var(--r-pill); color: var(--ink-2); overflow: hidden; opacity: 0;
+    transition: width 260ms var(--ease), opacity 200ms, transform 260ms var(--ease-spring);
+  }
+  .hdr__find.is-on { width: 40px; opacity: 1; }
+  .hdr__find:active { transform: scale(0.88); }
+
+  /* строка поиска — обычный блок под шапкой; при прокрутке всплывает по кнопке */
+  .hdr__search-row { padding-top: 10px; }
+  .hdr__search-row .search__input { min-height: 46px; padding-left: 42px; font-size: 16px; background: var(--glass); border-color: var(--glass-line); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+  .hdr__search-row .search__icon { left: 14px; width: 18px; z-index: 1; }
+  .hdr__search-row.is-floating {
+    position: fixed; left: 8px; right: 8px; top: calc(70px + env(safe-area-inset-top, 0px)); z-index: 49; width: auto; padding: 0;
+    animation: float-search 240ms var(--ease) both;
+  }
+  .hdr__search-row.is-floating .search__input { background: var(--card); box-shadow: var(--shadow-3); }
+  @keyframes float-search { from { opacity: 0; transform: translateY(-10px) scale(0.98); } }
+
+  /* нижнее меню — парящая капсула с переезжающей подсветкой */
+  .bnav {
+    left: 10px; right: 10px; bottom: calc(8px + env(safe-area-inset-bottom, 0px)); height: 62px; padding: 0;
+    border-radius: 22px; border: 1px solid var(--glass-line); background: var(--glass); box-shadow: var(--shadow-3);
+    -webkit-backdrop-filter: blur(20px) saturate(1.6); backdrop-filter: blur(20px) saturate(1.6);
+  }
+  .bnav::before {
+    content: ''; position: absolute; top: 6px; bottom: 6px; left: 6px; width: calc((100% - 12px) / 4); border-radius: 16px; background: var(--accent-tint);
+    box-shadow: inset 0 0 0 1px var(--stepper-line);
+    transform: translateX(calc(var(--bn-i, 0) * 100%)); transition: transform 460ms var(--ease-spring), opacity 200ms;
+  }
+  .bnav.is-none::before { opacity: 0; }
+  .bnav__item { position: relative; z-index: 1; min-width: 0; font-size: 0.6875rem; transition: color 200ms; }
+  .bnav__item svg { transition: transform 380ms var(--ease-spring); }
+  .bnav__item.active svg { transform: translateY(-1px) scale(1.1); }
+  .bnav__item:active svg { transform: scale(0.82); }
+
+  .prod__sticky { bottom: calc(var(--bottom-nav-h) + env(safe-area-inset-bottom, 0px)); border-radius: 18px; margin-inline: 8px; }
+  .ftr { padding-bottom: calc(var(--bottom-nav-h) + 24px + env(safe-area-inset-bottom)); }
+}
+
+/* ---------- Телефон ---------- */
+@media (max-width: 767.98px) {
+  :root { --gutter: 16px; }
+  main, .container, .section__head > *, .catpage__head > * { min-width: 0; }
+  .preview-strip { display: block; padding: 7px 12px; font-size: 0.6875rem; }
+  .preview-strip b { display: block; }
+  .preview-strip span { display: none; }
+  .search__panel { max-height: min(55dvh, 430px); }
+  .search__prod { grid-template-columns: 40px minmax(0, 1fr) auto; gap: 8px; }
+  .search__thumb, .search__thumb img { width: 38px; height: 38px; }
+  .search__price { font-size: 0.75rem; }
+  .search__ptitle { font-size: 0.8125rem; }
+
+  /* Первый экран: заголовок → живая коробка → текст → кнопки → цифры */
+  .hero { padding: 12px 0 8px; }
+  .hero__grid { grid-template-columns: minmax(0, 1fr); grid-template-areas: none; gap: 0; }
+  .hero__text { display: contents; }
+  .hero__stamp { order: 1; justify-self: start; padding: 5px 10px; font-size: 0.625rem; letter-spacing: 0.08em; }
+  .hero__title { order: 2; max-width: 15ch; margin-top: 12px; font-size: clamp(2.125rem, 10vw, 2.875rem); line-height: 1.02; letter-spacing: -0.035em; }
+  .hero__art { order: 3; grid-area: auto; margin: 0 calc(var(--gutter) * -1); }
+  .hero__lead { order: 4; max-width: 43ch; margin-top: 4px; font-size: 0.9375rem; line-height: 1.45; }
+  .hero__cta { order: 5; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px; margin-top: 14px; }
+  .hero__cta .btn { min-width: 0; min-height: 50px; padding: 11px 14px; font-size: 0.875rem; }
+  .hero__cta .btn svg { width: 18px; height: 18px; flex: none; }
+  .hero__cta-long { display: none; }
+  .hero__cta-short { display: inline; }
+  .hero__stats { order: 6; }
+  .hero__chips { display: none; grid-area: auto; }
+  .box-scene { --W: 156px; --H: 110px; --D: 122px; height: 226px; }
+  .box-shadow { bottom: 2%; }
+
+  .section { margin-top: 32px; padding-block: 0; }
+  #catalog { margin-top: 0; padding-top: 28px; }
+  .section__head { gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
+  .section__title, .catpage__title { font-size: 1.5rem; line-height: 1.15; }
+  .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .ctile, .ctile--big { grid-column: auto; grid-row: auto; min-height: 178px; padding: 14px; border-radius: 18px; }
+  .ctile__title, .ctile--big .ctile__title { max-width: 100%; font-size: 1rem; line-height: 1.15; overflow-wrap: anywhere; }
+  .ctile__text { gap: 5px; }
+  .ctile__n, .ctile__meta { font-size: 0.625rem; }
+  .ctile__img, .ctile--big .ctile__img { height: 54%; max-width: 68%; right: -2%; bottom: -3%; }
+  .ctile__go { width: 32px; height: 32px; left: 12px; bottom: 12px; }
+  .ctile__subs { display: none; }
+  .rsec { margin-top: 32px; }
+  .rsec__row { grid-auto-flow: row; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-columns: auto; gap: 10px; margin: 0; padding: 0 0 4px; overflow: visible; }
+  .rsec__row > li { min-width: 0; }
+  .stile { min-height: 146px; padding: 12px; border-radius: 16px; }
+  .stile__title { font-size: 0.875rem; overflow-wrap: anywhere; }
+  .stile img { width: 62%; max-height: 100px; }
+  .steps__list { gap: 10px; margin-top: 16px; }
+  .step { padding: 18px; border-radius: 18px; }
+  .step h3 { padding-right: 22px; font-size: 1rem; }
+  .step p { font-size: 0.875rem; }
+  .step__n { top: 14px; right: 14px; font-size: 2rem; }
+  .office { padding: 18px; }
+  .office__phone { font-size: 1.375rem; }
+  .office__mail { overflow-wrap: anywhere; }
+  .podpromo__chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: -4px; padding: 2px 4px; }
+  .podpromo__chips::-webkit-scrollbar { display: none; }
+  .podpromo__cta { justify-self: stretch; }
+  .ftr { margin-top: 36px; }
+  .ftr__tape { width: 100%; margin-inline: 0; transform: none; }
+  .ftr__legal, .ftr__mail { overflow-wrap: anywhere; }
+
+  .page, .catpage { padding-top: 16px; }
+  .catpage__head { margin-bottom: 16px; }
+  .crumbs { max-width: 100%; font-size: 0.75rem; overflow-wrap: anywhere; }
+  .chips { max-width: 100%; overscroll-behavior-x: contain; }
+  .chip { min-height: 44px; }
+  .pgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .pcard { --notch: 6px; padding: 8px 8px 10px; border-radius: 16px; }
+  .pcard__body { padding: 10px 1px 0; }
+  .pcard__title { font-size: 0.8125rem; line-height: 1.35; }
+  .pcard__title a { -webkit-line-clamp: 4; }
+  .pcard__stock { font-size: 0.6875rem; line-height: 1.4; }
+  .pcard__stub { gap: 8px; margin-inline: -8px; padding-inline: 8px; }
+  .pcard .price__main { gap: 2px 5px; }
+  .pcard .price__main b { font-size: 1.0625rem; }
+  .pcard .price__pack { font-size: 0.6875rem; overflow-wrap: anywhere; }
+  .pcard .addctl { gap: 5px; min-height: 44px; padding: 10px 6px; font-size: 0.75rem; }
+  .pcard .addctl__icon { width: 18px; height: 18px; flex-shrink: 0; }
+  .pcard .stepper { grid-template-columns: 40px minmax(0, 1fr) 40px; }
+  .pcard .stepper__val { font-size: 0.75rem; }
+  .pcard .stepper__val small { font-size: 0.625rem; }
+  .ptool__ctl { width: 100%; gap: 8px; flex-wrap: wrap; }
+  .ptool .switch { font-size: 0.75rem; gap: 6px; }
+  .ptool .select__btn { max-width: 100%; font-size: 0.75rem; }
+  .subtiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .subtile { min-height: 140px; padding: 12px; }
+  .subtile__title { font-size: 0.875rem; overflow-wrap: anywhere; }
+
+  .prod__grid { gap: 22px; }
+  .gallery { min-width: 0; }
+  .gallery__stage { max-width: 390px; margin-inline: auto; }
+  .gallery__thumb { width: 56px; height: 56px; }
+  .gallery__thumb img { width: 46px; height: 46px; }
+  .prod__title { font-size: 1.4375rem; line-height: 1.2; overflow-wrap: anywhere; }
+  .prod__info { gap: 14px; }
+  .prod__facts { gap: 6px; }
+  .prod__facts li { padding: 8px 10px; min-width: 0; }
+  .prod__details { margin-top: 28px; }
+  .prod__sticky { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 10px; padding: 10px 12px; }
+  .prod__sticky .price__main b { font-size: 1.25rem; }
+  .prod__sticky .price__pack { font-size: 0.625rem; }
+  .prod__sticky .addctl { padding-inline: 8px; font-size: 0.8125rem; }
+  .prod__sticky .stepper { grid-template-columns: 40px minmax(0, 1fr) 40px; }
+  .calc__row { grid-template-columns: 44px minmax(0, 1fr) 44px; }
+  .calc__pm { width: 44px; height: 48px; }
+  .calc__num { min-width: 0; font-size: 1rem; }
+  .calc .addctl { white-space: normal; }
+  .dims3d-ph { height: 300px; }
+
+  .dlg { max-width: 100%; }
+  .dlg__head { padding: 16px 16px 8px; }
+  .dlg__body { padding: 8px 16px 20px; }
+  .dlg__foot { padding: 14px 16px calc(14px + env(safe-area-inset-bottom)); }
+  .dlg__title { font-size: 1.25rem; min-width: 0; overflow-wrap: anywhere; }
+  .dlg--side .dlg__panel, .dlg--sheet .dlg__panel { max-height: 88dvh; }
+  .input, .field input, .field select, .field textarea { min-width: 0; font-size: 16px; }
+  .region { padding: 16px; border-radius: 20px; }
+  .region__opts { gap: 8px; }
+  .region__opt { min-height: 48px; font-size: 0.875rem; }
+  .cookie { left: 10px; right: 10px; padding: 12px; gap: 4px 10px; border-radius: 16px; }
+  .cookie__text { font-size: 0.6875rem; line-height: 1.4; }
+  .cookie__ok { min-width: 52px; min-height: 44px; }
+  .summary__total dd { font-size: 1.375rem; }
+  .cline { grid-template-columns: 56px minmax(0, 1fr); gap: 8px 10px; }
+  .cline__img { width: 56px; height: 56px; }
+  .cline__ctl { max-width: 100%; }
+  .oitem { grid-template-columns: 44px minmax(0, 1fr); grid-template-areas: 'img title' 'img qty' 'img sum'; }
+  .oitem__sum { font-size: 0.875rem; }
+}
+@media (max-width: 359.98px) {
+  :root { --gutter: 12px; }
+  .hero__title { font-size: 1.8125rem; }
+  .hero__cta .btn { padding-inline: 9px; font-size: 0.75rem; gap: 5px; }
+  .ctile, .ctile--big { padding: 12px; min-height: 162px; }
+  .ctile__title, .ctile--big .ctile__title { font-size: 0.875rem; }
+  .pcard .addctl__icon { display: none; }
+  .pcard .stepper { grid-template-columns: 36px minmax(0, 1fr) 36px; }
+  .pcard .price__main b { font-size: 1rem; }
+}
+@media (max-width: 767.98px) {
+  .hero { background: none; }
+  .hero__hint { bottom: -4px; }
+}

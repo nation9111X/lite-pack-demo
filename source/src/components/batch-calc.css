@@ -1,0 +1,33 @@
+.calc {
+  position: relative; display: grid; gap: 16px; padding: clamp(16px, 3vw, 24px); border-radius: var(--r-xl);
+  background:
+    repeating-linear-gradient(112deg, rgba(110, 76, 34, 0.04) 0 1.5px, transparent 1.5px 4.5px),
+    linear-gradient(160deg, var(--sticker), var(--sticker-2));
+  border: 1.5px dashed var(--kraft);
+}
+.calc__head { display: flex; gap: 12px; align-items: flex-start; }
+.calc__icon {
+  flex: none; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px;
+  background: var(--primary); color: #fff; box-shadow: 0 8px 18px -10px var(--glow);
+  animation: calc-bob 4s var(--ease) infinite;
+}
+@keyframes calc-bob { 50% { transform: translateY(-3px) rotate(-4deg); } }
+.calc__title { font-size: 1.25rem; }
+.calc__head .muted { font-size: 0.875rem; margin-top: 2px; }
+.calc__input { display: grid; gap: 8px; }
+.calc__row { display: grid; grid-template-columns: 48px 1fr 48px; gap: 8px; align-items: center; }
+.calc__pm { width: 48px; height: 48px; background: var(--card); border: 1.5px solid var(--line); }
+.calc__num {
+  text-align: center; font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; min-height: 52px; padding: 8px;
+  -moz-appearance: textfield;
+}
+.calc__num::-webkit-outer-spin-button, .calc__num::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.calc__presets { display: flex; flex-wrap: wrap; gap: 6px; }
+.calc__presets .chip { min-height: 36px; padding: 6px 12px; font-size: 0.875rem; font-variant-numeric: tabular-nums; }
+.calc__out { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 0; }
+.calc__out > div { display: grid; gap: 2px; padding: 10px 12px; border-radius: var(--r-md); background: color-mix(in srgb, var(--card) 75%, transparent); }
+.calc__out dt { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
+.calc__out dd { margin: 0; font-weight: 800; font-size: 1.125rem; font-variant-numeric: tabular-nums; }
+.calc__sum { grid-column: 1 / -1; background: var(--card) !important; box-shadow: inset 0 0 0 1.5px var(--accent); }
+.calc__sum dd { font-family: var(--font-display); font-size: 1.625rem; color: var(--brand-deep); }
+.calc__warn { margin: 0; }

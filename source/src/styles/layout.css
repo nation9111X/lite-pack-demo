@@ -1,0 +1,130 @@
+main { display: block; min-height: 60vh; outline: none; }
+.page-fallback { display: grid; place-items: center; min-height: 50vh; }
+
+.page { padding-top: var(--s5); }
+.page__head { display: grid; gap: 10px; margin-bottom: var(--s5); }
+.page__title { font-size: var(--fs-h1); }
+.page__sub { color: var(--ink-2); max-width: 60ch; }
+.page__count { font-family: var(--font-mono); font-size: 0.8125rem; color: var(--ink-3); letter-spacing: 0.04em; }
+
+.section { margin-top: var(--s8); }
+.section__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: var(--s5); }
+.section__title { font-size: var(--fs-h2); }
+.section__link { display: inline-flex; align-items: center; gap: 6px; font-weight: 650; color: var(--brand-deep); text-decoration: none; white-space: nowrap; }
+.section__link:hover { text-decoration: underline; }
+
+.panel { background: var(--card); border-radius: var(--r-xl); padding: clamp(16px, 3vw, 28px); box-shadow: var(--shadow-1); }
+
+/* Пустые состояния и ошибки */
+.empty { display: grid; justify-items: center; gap: 12px; text-align: center; padding: 56px 16px; }
+.empty__art { width: 160px; height: 160px; }
+.empty h2 { font-size: var(--fs-h2); }
+.empty p { color: var(--ink-2); max-width: 44ch; }
+
+/* Чипы */
+.chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding: 2px; margin: -2px; scroll-snap-type: x proximity; }
+.chips::-webkit-scrollbar { display: none; }
+.chip {
+  flex: none; display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 8px 16px; border-radius: var(--r-pill);
+  background: var(--card); border: 1.5px solid var(--line); font-weight: 600; font-size: 0.9375rem; text-decoration: none; white-space: nowrap;
+  scroll-snap-align: start; transition: border-color var(--t-fast), background var(--t-fast), color var(--t-fast);
+}
+.chip:hover { border-color: var(--ink-3); }
+.chip.is-on, .chip[aria-current='page'] { background: var(--inverse); border-color: var(--inverse); color: var(--on-inverse); }
+.chip__n { font-family: var(--font-mono); font-size: 0.75rem; opacity: 0.7; }
+
+/* Вкладки */
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: var(--s5); }
+.tabs__btn { position: relative; min-height: 48px; padding: 10px 16px; font-weight: 650; color: var(--ink-3); }
+.tabs__btn[aria-selected='true'] { color: var(--ink); }
+.tabs__btn[aria-selected='true']::after { content: ''; position: absolute; left: 12px; right: 12px; bottom: -1px; height: 3px; border-radius: 3px 3px 0 0; background: var(--primary); }
+
+/* Двухколоночные страницы */
+.split { display: grid; gap: var(--s6); }
+@media (min-width: 1024px) {
+  .split { grid-template-columns: minmax(0, 1fr) 400px; align-items: start; }
+  .split__aside { position: sticky; top: calc(var(--header-h) + 20px); }
+}
+
+/* Описание-список (спецификация) */
+.spec { display: grid; gap: 0; margin: 0; }
+.spec > div { display: grid; grid-template-columns: minmax(120px, 42%) 1fr; gap: 12px; padding: 10px 0; border-bottom: var(--dash); }
+.spec dt { color: var(--ink-3); position: relative; overflow: hidden; }
+.spec dd { margin: 0; font-weight: 550; }
+
+.back-link { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; color: var(--ink-2); font-weight: 600; text-decoration: none; }
+.back-link:hover { color: var(--brand-deep); }
+
+.status {
+  display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: var(--r-pill); font-size: 0.8125rem; font-weight: 700;
+  background: var(--paper); color: var(--ink-2);
+}
+.status--ok { background: var(--accent-tint); color: var(--brand-deep); }
+.status--warn { background: var(--warn-bg); color: var(--warn-ink); }
+.status--off { background: var(--signal-tint); color: var(--off-ink); }
+.split > *, .prod__grid > *, .hero__grid > *, .account__grid > * { min-width: 0; }
+
+/* ---------- Живые карточки: подъём + лёгкий 3D-наклон за курсором (lib/interactions.ts) ---------- */
+/* 3D-трансформация включается только под курсором: иначе каждая карточка — отдельный графический слой,
+   а это лишняя нагрузка на слабых телефонах и при прокрутке длинных списков */
+.pcard, .ctile, .stile, .subtile {
+  --tx: 0deg; --ty: 0deg; --lift: 0px;
+  transform: translateY(var(--lift));
+  transition: transform 520ms var(--ease), box-shadow 300ms var(--ease);
+}
+@media (hover: hover) and (pointer: fine) {
+  .pcard:hover, .ctile:hover, .stile:hover, .subtile:hover {
+    transform: perspective(900px) rotateX(var(--tx)) rotateY(var(--ty)) translateY(var(--lift));
+    transition: transform 140ms linear, box-shadow 300ms var(--ease);
+  }
+}
+/* Блик в точке курсора */
+.pcard::before, .stile::before, .subtile::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 3;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 0%), rgba(255, 255, 255, 0.5), transparent 45%);
+  opacity: 0; transition: opacity 300ms var(--ease);
+}
+@media (hover: hover) and (pointer: fine) { .pcard:hover::before, .stile:hover::before, .subtile:hover::before { opacity: 1; mix-blend-mode: soft-light; } }
+
+/* Чипы */
+.chip { transition: border-color 200ms var(--ease), background-color 200ms var(--ease), color 200ms var(--ease), transform 260ms var(--ease-spring), box-shadow 260ms var(--ease); position: relative; overflow: hidden; }
+@media (hover: hover) {
+  .chip:not(.is-on):hover { border-color: var(--brand-deep); color: var(--brand-deep); background: var(--accent-tint); transform: translateY(-2px); box-shadow: 0 6px 14px -8px var(--glow); }
+}
+.chip:active { transform: scale(0.96); }
+
+/* Вкладки */
+.tabs__btn { transition: color 200ms var(--ease); }
+.tabs__btn::after { transition: transform 300ms var(--ease-spring); }
+.tabs__btn:hover { color: var(--brand-deep); }
+
+@media (prefers-reduced-motion: reduce) {
+  .pcard, .ctile, .stile, .subtile { transform: none !important; }
+}
+
+/* Лента прогресса прокрутки */
+.scroll-tape {
+  position: fixed; left: 0; right: 0; top: 0; z-index: 70; height: 3px; pointer-events: none;
+  transform-origin: 0 50%; transform: scaleX(0); will-change: transform;
+  background: repeating-linear-gradient(90deg, var(--primary) 0 18px, var(--kraft) 18px 26px);
+}
+/* Полоса прогресса целиком на CSS там, где браузер это умеет: ноль работы для JS в каждом кадре */
+@keyframes tape-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@supports (animation-timeline: scroll()) {
+  .scroll-tape { animation: tape-grow linear both; animation-timeline: scroll(root block); will-change: auto; }
+}
+
+/* Пока страница едет, карточки под неподвижным курсором не «ловят» наведение:
+   браузеру не нужно в каждом кадре искать элемент под курсором и запускать эффекты */
+/* Keep links and controls clickable during scrolling. */
+
+/* Сборка для показа заказчику: полоса над шапкой (уезжает при прокрутке) */
+.preview-strip {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 12px; padding: 8px 16px;
+  background: var(--night); color: #fff; font-size: 0.8125rem; line-height: 1.35; text-align: center;
+}
+.preview-strip b { color: #9be7a8; font-weight: 650; }
+.preview-strip span { opacity: 0.85; }
+.demo-note { margin: 0; padding: 10px 14px; border-radius: var(--r-md); background: var(--accent-tint); color: var(--brand-deep); font-size: 0.875rem; }
+
+.perf-paused,.perf-paused::before,.perf-paused::after,html.perf-hidden .perf-watch,html.perf-hidden .perf-watch::before,html.perf-hidden .perf-watch::after{animation-play-state:paused!important}

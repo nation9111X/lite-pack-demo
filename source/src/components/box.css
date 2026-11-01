@@ -1,0 +1,90 @@
+/* ---------- 3D-коробка первого экрана ---------- */
+.box-scene {
+  --W: 270px; --H: 190px; --D: 210px;
+  --rx: -16deg; --ry: -28deg; --open: 0.6;
+  --kraft-tex:
+    repeating-linear-gradient(112deg, rgba(110, 76, 34, 0.07) 0 1.5px, transparent 1.5px 4.5px),
+    repeating-linear-gradient(22deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 7px),
+    linear-gradient(160deg, #dcbf93, #c9a273);
+  position: relative; width: 100%; height: 460px; perspective: 1200px; perspective-origin: 50% 30%;
+  display: grid; place-items: center; pointer-events: none; user-select: none;
+}
+@media (max-width: 767.98px) {
+  .box-scene { --W: 170px; --H: 120px; --D: 134px; height: 250px; }
+}
+.box-float { transform-style: preserve-3d; animation: box-float 7s ease-in-out infinite; }
+@keyframes box-float { 50% { transform: translateY(-10px) rotateX(2deg); } }
+.box { position: relative; width: 0; height: 0; transform-style: preserve-3d; transform: translateY(30px) rotateX(var(--rx)) rotateY(var(--ry)); }
+
+.box__face, .box__flap, .box__sticker, .box__items { position: absolute; left: 0; top: 0; transform-style: preserve-3d; }
+/* затемнение граней рисуем в фоне: фильтр на 3D-слое пересчитывался бы на каждый кадр покачивания */
+.box__face { --shade: 0; background: linear-gradient(rgba(0, 0, 0, var(--shade)), rgba(0, 0, 0, var(--shade))), var(--kraft-tex); box-shadow: inset 0 0 0 1px rgba(122, 86, 44, 0.35); }
+.box__front { width: var(--W); height: var(--H); margin: calc(var(--H) / -2) 0 0 calc(var(--W) / -2); transform: translateZ(calc(var(--D) / 2)); }
+.box__back { width: var(--W); height: var(--H); margin: calc(var(--H) / -2) 0 0 calc(var(--W) / -2); transform: rotateY(180deg) translateZ(calc(var(--D) / 2)); --shade: 0.2; }
+.box__right { width: var(--D); height: var(--H); margin: calc(var(--H) / -2) 0 0 calc(var(--D) / -2); transform: rotateY(90deg) translateZ(calc(var(--W) / 2)); --shade: 0.14; }
+.box__left { width: var(--D); height: var(--H); margin: calc(var(--H) / -2) 0 0 calc(var(--D) / -2); transform: rotateY(-90deg) translateZ(calc(var(--W) / 2)); --shade: 0.08; }
+.box__bottom { width: var(--W); height: var(--D); margin: calc(var(--D) / -2) 0 0 calc(var(--W) / -2); transform: rotateX(-90deg) translateZ(calc(var(--H) / 2)); --shade: 0.4; }
+
+/* Печать на гранях */
+.box__dieline { position: absolute; inset: 12px; border: 1.5px dashed rgba(90, 60, 25, 0.45); border-radius: 4px; }
+.box__marks { position: absolute; right: 14%; bottom: 16%; width: 46%; color: rgba(70, 45, 15, 0.62); }
+.box__tape-v { position: absolute; left: 50%; top: 0; width: 26%; height: 34%; transform: translateX(-50%); background: var(--primary); box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.12); }
+.box__tape-h {
+  position: absolute; left: 0; right: 0; top: 0; height: 26%;
+  background: var(--primary); box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.12);
+}
+
+.box__sticker {
+  width: calc(var(--W) * 0.52); margin: 0 0 0 calc(var(--W) * -0.26); padding: 7px 9px; background: #fff; border-radius: 6px;
+  transform: translate3d(0, calc(var(--H) * -0.08), calc(var(--D) / 2 + 0.6px)) rotateZ(-3deg);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08); backface-visibility: hidden;
+}
+.box__sticker img { width: 100%; height: auto; }
+
+/* Клапаны: шарнир по верхнему ребру передней/задней грани */
+.box__flap {
+  width: var(--W); height: calc(var(--D) / 2); margin: calc(var(--D) / -4) 0 0 calc(var(--W) / -2);
+  background: var(--kraft-tex); box-shadow: inset 0 0 0 1px rgba(122, 86, 44, 0.4);
+  transform-origin: 50% 100%;
+}
+.box__flap--front { transform: translate3d(0, calc(var(--H) / -2 - var(--D) / 4), calc(var(--D) / 2)) rotateX(calc(90deg - var(--open) * 220deg)); }
+.box__flap--back { transform: translate3d(0, calc(var(--H) / -2 - var(--D) / 4), calc(var(--D) / -2)) rotateX(calc(-90deg + var(--open) * 220deg)); background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), var(--kraft-tex); }
+
+/* Товары поднимаются из коробки */
+.box__items { width: 0; height: 0; }
+/* Предметы стоят ВНУТРИ короба плоскостями параллельно передней стенке: не пересекают грани при повороте
+   (раньше «следили» за камерой, пересекали стенки и мерцали) и не отрываются от дна — выглядывают из-за борта. */
+.box__item {
+  --w: calc(var(--W) * var(--k, 0.46));
+  position: absolute; width: var(--w); height: var(--w); max-width: none; margin: calc(var(--w) / -2) 0 0 calc(var(--w) / -2); object-fit: contain; object-position: center bottom;
+  filter: drop-shadow(0 6px 8px rgba(60, 40, 10, 0.28));
+  /* видимая над бортом доля: 0.6 → 0.75 при раскрытии; низ всегда ниже борта */
+  transform: translate3d(var(--x), calc(var(--H) / -2 + var(--w) * (var(--sink, 0.12) - 0.34 * min(var(--open), 1))), var(--z)) rotateZ(var(--rot));
+  backface-visibility: hidden;
+}
+.box__item--0 { --k: 0.5; --x: calc(var(--W) * -0.15); --z: calc(var(--D) * -0.24); --rot: -4deg; --sink: 0.1; }
+.box__item--1 { --k: 0.46; --x: calc(var(--W) * 0.17); --z: calc(var(--D) * -0.06); --rot: 5deg; --sink: 0.14; }
+.box__item--2 { --k: 0.4; --x: calc(var(--W) * -0.02); --z: calc(var(--D) * 0.16); --rot: -1deg; --sink: 0.2; }
+
+.box-shadow {
+  position: absolute; left: 50%; bottom: 8%; width: calc(var(--W) * 1.5); height: 50px; margin-left: calc(var(--W) * -0.75);
+  background: radial-gradient(closest-side, rgba(70, 50, 20, 0.32), transparent); filter: blur(4px);
+  animation: shadow-pulse 7s ease-in-out infinite;
+}
+@keyframes shadow-pulse { 50% { transform: scale(0.9); opacity: 0.8; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .box-float, .box-shadow { animation: none; }
+}
+.box__items picture { display: contents; }
+/* Палец крутит коробку; вертикальная прокрутка страницы остаётся за браузером */
+@media (hover: none) {
+  .box-scene { pointer-events: auto; touch-action: pan-y; -webkit-tap-highlight-color: transparent; }
+  .box__item { filter: none; }
+}
+/* На телефоне коробка покачивается сама: только transform и rotate, поэтому главный поток свободен */
+@media (hover: none) and (prefers-reduced-motion: no-preference) {
+  .box-float { animation: box-float 7s ease-in-out infinite, box-sway 11s ease-in-out infinite alternate; }
+}
+.box-scene.is-away > * { display: none; }
+@keyframes box-sway { from { rotate: y -6deg; } to { rotate: y 6deg; } }

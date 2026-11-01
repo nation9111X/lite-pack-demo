@@ -1,0 +1,39 @@
+html.has-dialog { overflow: hidden; }
+.dlg {
+  padding: 0; border: 0; background: transparent; color: var(--ink); max-width: none; max-height: none;
+  overscroll-behavior: contain;
+}
+.dlg::backdrop { background: rgba(0, 32, 30, 0.42); backdrop-filter: blur(3px); animation: fade-in var(--t-med) var(--ease); }
+.dlg__panel {
+  display: flex; flex-direction: column; background: var(--card); box-shadow: var(--shadow-3); overflow: hidden;
+}
+.dlg__head { display: flex; align-items: center; gap: 12px; padding: 18px 20px 8px 24px; }
+.dlg__head--bare { padding-bottom: 0; justify-content: flex-end; }
+.dlg__title { font-size: 1.375rem; flex: 1; }
+.dlg__close { margin-left: auto; background: var(--paper); }
+.dlg__body { padding: 8px 24px 24px; overflow-y: auto; overscroll-behavior: contain; }
+.dlg__foot { padding: 16px 24px calc(16px + env(safe-area-inset-bottom)); border-top: var(--dash); background: var(--card); }
+
+/* Центр */
+.dlg--center { margin: auto; width: min(560px, calc(100vw - 24px)); }
+.dlg--center.dlg--wide { width: min(860px, calc(100vw - 24px)); }
+.dlg--center .dlg__panel { border-radius: var(--r-xl); max-height: min(88vh, 900px); animation: pop-in var(--t-slow) var(--ease-spring); }
+
+/* Шторка справа (десктоп) / снизу (мобильный) */
+.dlg--side, .dlg--sheet { margin: 0; inset: auto 0 0 0; width: 100vw; height: auto; }
+.dlg--side .dlg__panel, .dlg--sheet .dlg__panel {
+  border-radius: var(--r-xl) var(--r-xl) 0 0; max-height: 92dvh; animation: slide-up var(--t-slow) var(--ease);
+}
+@media (min-width: 900px) {
+  .dlg--side { inset: 0 0 0 auto; width: min(480px, 100vw); height: 100dvh; }
+  .dlg--side.dlg--wide { width: min(560px, 100vw); }
+  .dlg--side .dlg__panel { height: 100%; max-height: none; border-radius: var(--r-xl) 0 0 var(--r-xl); animation: slide-left var(--t-slow) var(--ease); }
+  .dlg--side .dlg__body { flex: 1; }
+  .dlg--sheet { inset: 0; margin: auto; width: min(620px, calc(100vw - 32px)); height: fit-content; }
+  .dlg--sheet .dlg__panel { border-radius: var(--r-xl); max-height: 88vh; animation: pop-in var(--t-slow) var(--ease-spring); }
+}
+
+@keyframes fade-in { from { opacity: 0; } }
+@keyframes pop-in { from { opacity: 0; transform: translateY(10px) scale(0.97); } }
+@keyframes slide-up { from { transform: translateY(100%); } }
+@keyframes slide-left { from { transform: translateX(100%); } }

@@ -1,0 +1,55 @@
+.ftr { overflow-x: clip; margin-top: var(--s9); background: var(--night); color: #dfe7e5; padding-bottom: calc(var(--bottom-nav-h) + 24px + env(safe-area-inset-bottom)); }
+/* Упаковочная лента с печатью */
+.ftr__tape {
+  overflow: hidden; white-space: nowrap; padding: 10px 0; margin-inline: -2%; width: 104%;
+  background: var(--primary); color: #fff; font-family: var(--font-display); font-weight: 800; letter-spacing: 0.08em; font-size: 0.875rem;
+  transform: rotate(-1deg) translateY(-14px); box-shadow: 0 10px 24px -14px rgba(0, 0, 0, 0.6);
+}
+.ftr__track { display: flex; width: max-content; animation: tape-run 36s linear infinite; will-change: transform; }
+.ftr__track span { flex: none; padding-right: 32px; }
+@keyframes tape-run { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-50%, 0, 0); } }
+@media (hover: hover) { .ftr__tape:hover .ftr__track { animation-play-state: paused; } }
+.ftr__grid { display: grid; gap: 32px; padding-top: 24px; padding-bottom: 32px; }
+@media (min-width: 768px) { .ftr__grid { grid-template-columns: 1.3fr 1fr 1fr 1.2fr; } }
+.ftr__logo { display: inline-block; padding: 10px 14px; border-radius: var(--r-md); background: #fff; }
+.ftr__logo img { width: 120px; height: auto; }
+.ftr__tagline { margin-top: 14px; color: #b7c4c1; max-width: 26ch; }
+.ftr__apps { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.ftr__app {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 8px 14px; border-radius: var(--r-md);
+  border: 1px solid rgba(255, 255, 255, 0.22); color: #fff; text-decoration: none; font-weight: 600; font-size: 0.875rem;
+}
+.ftr__app:hover { background: rgba(255, 255, 255, 0.08); }
+.ftr__app--icon { width: 44px; justify-content: center; padding: 0; }
+.ftr__h { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: #9fb0ac; font-weight: 600; margin-bottom: 14px; }
+.ftr__col ul { display: grid; gap: 8px; }
+.ftr__col a { color: #e9efee; text-decoration: none; }
+.ftr__col a:hover { color: #fff; text-decoration: underline; }
+.ftr__office { display: grid; gap: 2px; margin-bottom: 16px; }
+.ftr__office .label { color: #9fb0ac; }
+.ftr__phone { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; color: #fff !important; }
+.ftr__mail { font-size: 0.875rem; color: #b7c4c1 !important; word-break: break-all; }
+.ftr__legal { display: grid; gap: 10px; padding-top: 20px; border-top: 1.5px dashed rgba(255, 255, 255, 0.18); font-size: 0.8125rem; color: #9fb0ac; }
+.ftr__legal .muted { color: #8a9b97; }
+.ftr__docs { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+.ftr__docs a { color: #b7c4c1; }
+
+/* Хлебные крошки */
+/* Одна строка с прокруткой: высота не меняется, когда путь догружается (без сдвига макета) */
+.crumbs ol { display: flex; flex-wrap: nowrap; align-items: center; gap: 4px 0; font-size: 0.875rem; color: var(--ink-3); overflow-x: auto; white-space: nowrap; scrollbar-width: none; min-height: 1.6em; }
+.crumbs ol::-webkit-scrollbar { display: none; }
+.crumbs li { flex: none; }
+.crumbs li:last-child { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.crumbs li:last-child span { overflow: hidden; text-overflow: ellipsis; }
+.crumbs li { display: inline-flex; align-items: center; }
+.crumbs li + li::before { content: '/'; margin: 0 8px; color: var(--line-strong); }
+.crumbs a { color: var(--ink-2); text-decoration: none; }
+.crumbs a:hover { color: var(--brand-deep); text-decoration: underline; }
+.crumbs [aria-current] { color: var(--ink-3); }
+
+.ftr__col a, .ftr__docs a { transition: color 200ms, padding-left 240ms var(--ease); }
+.ftr__col ul a:hover { padding-left: 4px; color: var(--accent) !important; text-decoration: none; }
+.ftr__app { transition: background-color 200ms, transform 260ms var(--ease-spring), border-color 200ms; }
+.ftr__app:hover { transform: translateY(-2px); border-color: var(--accent); }
+.ftr__logo { transition: transform 320ms var(--ease-spring); }
+.ftr__logo:hover { transform: rotate(-3deg) scale(1.04); }

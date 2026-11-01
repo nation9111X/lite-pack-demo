@@ -1,0 +1,10 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch({ args: ['--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist'] });
+const p = await b.newPage({ viewport: { width: 1440, height: 900 } });
+p.on('request', r => { if (/mc\.yandex|metrika/.test(r.url())) console.log(((Date.now()-t0)/1000).toFixed(1)+'s', r.method(), r.url().slice(0,140)); });
+const t0=Date.now();
+await p.goto('https://lite-pack.ru/', { waitUntil: 'load' });
+await p.waitForTimeout(16000);
+console.log('--- click OK cookie');
+await p.mouse.click(145,800); await p.waitForTimeout(5000);
+await b.close();

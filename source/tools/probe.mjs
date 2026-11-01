@@ -1,0 +1,10 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch({ args: ['--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist'] });
+const p = await b.newPage({ viewport: { width: 1440, height: 900 } });
+p.on('console', m => console.log('CONSOLE', m.type(), m.text().slice(0,200)));
+p.on('request', r => { const u=r.url(); if(!/\.(png|jpg|svg|ttf|woff2?|gif|ico)(\?|$)/.test(u)) console.log('REQ', r.method(), u.slice(0,160)); });
+p.on('requestfailed', r => console.log('FAIL', r.url().slice(0,160), r.failure()?.errorText));
+await p.goto('https://lite-pack.ru/', { waitUntil: 'load', timeout: 90000 });
+await p.waitForTimeout(15000);
+await p.screenshot({ path: 'probe.png' });
+await b.close();

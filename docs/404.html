@@ -2,6 +2,7 @@
 <html lang="ru" xml:lang="ru" xmlns:og="http://ogp.me/ns#">
 <head>
   <meta name="robots" content="noindex, nofollow">
+  <link rel="preload" href="/lite-pack-demo/demo/catalog.bin" as="fetch" crossorigin>
   <base href="/lite-pack-demo/">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -16,7 +17,19 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="ru_RU" />
   <link rel="canonical" href="https://lite-pack.ru/" />
-  <meta name="theme-color" content="#ffffff" />
+  <meta name="theme-color" content="#f6f3ec" />
+  <script>
+    /* Тема до первой отрисовки, без вспышки: выбор покупателя или настройка телефона */
+    (function () {
+      try {
+        var t = localStorage.getItem('lp.theme');
+        if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.dataset.theme = t;
+        var m = document.querySelector('meta[name="theme-color"]');
+        if (m) m.content = t === 'dark' ? '#0d1411' : '#f6f3ec';
+      } catch (e) {}
+    })();
+  </script>
 
   <!-- iOS meta tags & icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -109,13 +122,15 @@
   <style>
     /* Критичный CSS: фон и каркас до загрузки скриптов, без белой вспышки */
     html { background: #f6f3ec; }
-    body { margin: 0; background: #f6f3ec; color: #00201e; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+    html[data-theme='dark'] { background: #0d1411; }
+    body { margin: 0; color: #00201e; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+    html[data-theme='dark'] body { color: #edf3ee; }
     .boot { min-height: 100vh; display: grid; place-items: center; }
     .boot img { width: 120px; height: auto; }
   </style>
-  <script type="module" crossorigin src="/lite-pack-demo/assets/index-C0cmH0Om.js"></script>
-  <link rel="modulepreload" crossorigin href="/lite-pack-demo/assets/vendor-BYXRRVZE.js">
-  <link rel="stylesheet" crossorigin href="/lite-pack-demo/assets/index-CdRr-KO9.css">
+  <script type="module" crossorigin src="/lite-pack-demo/assets/index-COIACU4P.js"></script>
+  <link rel="modulepreload" crossorigin href="/lite-pack-demo/assets/vendor-BrwOt3Hz.js">
+  <link rel="stylesheet" crossorigin href="/lite-pack-demo/assets/index-Bncihtln.css">
 </head>
 <body>
   <div id="root">

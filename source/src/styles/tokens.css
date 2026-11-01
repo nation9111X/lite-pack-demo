@@ -1,0 +1,166 @@
+/* Токены дизайн-системы «Развёртка» — см. docs/DESIGN.md */
+:root {
+  /* Бренд (неизменяемо) */
+  --brand-logo: #00671e;
+  --brand-black: #000000;
+  --brand-action: #19b236;
+  --brand-deep: #0d6e20;
+  --brand-banner: #158b2d;
+  --brand-tint: #e1f7e0;
+  --brand-ink: #00201e;
+
+  /* Интерфейс */
+  --paper: #f6f3ec;
+  --paper-2: #efe8da;
+  --kraft: #c9a57a;
+  --kraft-light: #dcc19b;
+  --kraft-deep: #9c7a52;
+  --kraft-ink: #6b5232; /* крафт для текста: контраст AA на светлом */
+  --card: #ffffff;
+  --ink: var(--brand-ink);
+  --ink-2: #3e4f4b;
+  --ink-3: #55635f;
+  --line: #e2dbcd;
+  --line-strong: #cfc6b4;
+  --primary: var(--brand-logo);
+  --primary-hover: var(--brand-deep);
+  --accent: var(--brand-action);
+  --accent-tint: var(--brand-tint);
+  --signal: #c2410c;
+  --signal-tint: #fdebe1;
+  --warn-bg: #fff4d6;
+  --warn-line: #f1d48a;
+  --warn-ink: #6b4b00;
+  --off-ink: #8a2d07;
+  --error-ink: #7a2408;
+
+  /* Поверхности, которые меняются в тёмной теме */
+  --plate: var(--paper); /* подложка под фото товара: в тёмной теме остаётся светлой, как витрина */
+  --plate-hi: #ffffff;
+  --overlay: var(--brand-ink); /* плашки поверх страницы: cookie, уведомления */
+  --on-overlay: #ffffff;
+  --overlay-soft: #c9d3d1;
+  --night: var(--brand-ink); /* подвал */
+  --inverse: var(--brand-ink); /* выбранный чип, активный пункт меню */
+  --on-inverse: #ffffff;
+  --tint-soft: #f1f8ef;
+  --sheet: #fffdf8; /* «упаковочный лист» */
+  --sticker: #fbf6ec; /* стикер «не забудьте крышки», калькулятор */
+  --sticker-2: #f3e9d7;
+  --skeleton-hi: #f7f2e8;
+  --tape-stripe: #e9e0cf;
+  --bad-tint: #fff3ec;
+  --stamp-kraft: #f5ecdc;
+  --glass: rgba(255, 255, 255, 0.78);
+  --glass-line: rgba(0, 32, 30, 0.08);
+  --glow: rgba(0, 103, 30, 0.45);
+  --ring: rgba(13, 110, 32, 0.16);
+  --stepper-bg: #e8f3e6; /* степпер и другие спокойные зелёные заливки */
+  --stepper-ink: var(--brand-deep);
+  --stepper-line: rgba(0, 103, 30, 0.2);
+
+  /* Шрифты */
+  --font-display: 'Geologica Variable', 'Onest Variable', system-ui, sans-serif;
+  --font-text: 'Onest Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Mono', 'SF Mono', 'Roboto Mono', Menlo, Consolas, monospace;
+
+  --fs-hero: clamp(2.25rem, 1.4rem + 4.2vw, 4.75rem);
+  --fs-h1: clamp(1.75rem, 1.3rem + 2vw, 3rem);
+  --fs-h2: clamp(1.375rem, 1.15rem + 1vw, 2rem);
+  --fs-h3: 1.125rem;
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+  --fs-mono: 0.8125rem;
+
+  /* Отступы */
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 48px; --s8: 64px; --s9: 96px;
+  --gutter: 16px;
+  --container: 1360px;
+
+  /* Радиусы, линии, тени */
+  --r-xs: 6px; --r-sm: 10px; --r-md: 14px; --r-lg: 20px; --r-xl: 28px; --r-pill: 999px;
+  --dash: 1.5px dashed var(--line-strong);
+  --shadow-1: 0 1px 0 rgba(0, 32, 30, 0.06), 0 2px 6px rgba(0, 32, 30, 0.05);
+  --shadow-2: 0 2px 0 rgba(0, 32, 30, 0.05), 0 12px 28px -8px rgba(0, 32, 30, 0.18);
+  --shadow-3: 0 24px 60px -18px rgba(0, 32, 30, 0.35);
+
+  /* Движение */
+  --t-fast: 140ms;
+  --t-med: 220ms;
+  --t-slow: 360ms;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --header-h: 64px;
+  --bottom-nav-h: 0px;
+}
+
+/* ---------- Тёмная тема: ночной склад — тёмная зелень, тёплый крафт, фото на светлых витринах ---------- */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --paper: #0d1411;
+  --paper-2: #151e1a;
+  --card: #18221d;
+  --kraft: #c9a57a;
+  --kraft-light: #e0c7a2;
+  --kraft-deep: #b89366;
+  --kraft-ink: #dcc29c;
+  --ink: #edf3ee;
+  --ink-2: #c4d0ca;
+  --ink-3: #9aa9a2;
+  --line: #2a3731;
+  --line-strong: #3b4a43;
+  --primary: #15803a;
+  --primary-hover: #1b9345;
+  --brand-deep: #7ed79a;
+  --accent: #2fa650;
+  --accent-tint: #1b3225;
+  --brand-tint: #1f4a2d;
+  --signal: #ff9266;
+  --signal-tint: #3b2017;
+  --warn-bg: #30270f;
+  --warn-line: #66551f;
+  --warn-ink: #f1d48a;
+  --off-ink: #ffb597;
+  --error-ink: #ffc9b3;
+
+  --plate: #ece7dc;
+  --plate-hi: #f8f5ee;
+  --overlay: #223029;
+  --on-overlay: #f2f6f3;
+  --overlay-soft: #b9c6c0;
+  --night: #080d0b;
+  --inverse: #e3ece6;
+  --on-inverse: #0d1411;
+  --tint-soft: #17291f;
+  --sheet: #141d19;
+  --sticker: #1d2118;
+  --sticker-2: #242818;
+  --skeleton-hi: #24302a;
+  --tape-stripe: #1f2925;
+  --bad-tint: #38211a;
+  --stamp-kraft: #2b241a;
+  --glass: rgba(22, 31, 27, 0.72);
+  --glass-line: rgba(255, 255, 255, 0.09);
+  --glow: rgba(47, 166, 80, 0.5);
+  --ring: rgba(126, 215, 154, 0.2);
+  --stepper-bg: #1d3626;
+  --stepper-ink: #a9e8bd;
+  --stepper-line: rgba(126, 215, 154, 0.28);
+  --shadow-1: 0 0 0 1px rgba(255, 255, 255, 0.05), 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 0 0 1px rgba(255, 255, 255, 0.07), 0 16px 34px -10px rgba(0, 0, 0, 0.65);
+  --shadow-3: 0 0 0 1px rgba(255, 255, 255, 0.07), 0 28px 70px -18px rgba(0, 0, 0, 0.8);
+}
+
+@media (min-width: 768px) {
+  :root { --gutter: 24px; }
+}
+@media (min-width: 1280px) {
+  :root { --gutter: 32px; --header-h: 76px; }
+}
+@media (max-width: 1023.98px) {
+  :root { --bottom-nav-h: 64px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root { --t-fast: 0ms; --t-med: 0ms; --t-slow: 0ms; }
+}

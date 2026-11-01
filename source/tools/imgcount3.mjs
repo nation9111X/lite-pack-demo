@@ -1,0 +1,10 @@
+import { chromium } from 'playwright';
+const url = process.argv[2];
+const b = await chromium.launch();
+const ctx = await b.newContext({ viewport: { width: 412, height: 823 }, deviceScaleFactor: 1.75, isMobile: true });
+await ctx.route('**/assets/*.js', (r) => r.abort());
+const p = await ctx.newPage(); let n = 0;
+p.on('requestfinished', (r) => { if (/,fit\//.test(r.url())) n++; });
+await p.goto(url, { waitUntil: 'networkidle' }); await p.waitForTimeout(2000);
+console.log('JS включён, бандл заблокирован (только SSR-разметка), images:', n);
+await b.close();
