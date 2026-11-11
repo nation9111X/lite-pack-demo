@@ -1,0 +1,1 @@
+.rel__rail{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(168px,44%);gap:10px;overflow-x:auto;padding:2px 2px 8px;scroll-snap-type:x proximity;overscroll-behavior-x:contain;scrollbar-width:thin}.rel__rail>*{scroll-snap-align:start}@media (min-width: 768px){.rel__rail{grid-auto-columns:minmax(200px,23%)}}
